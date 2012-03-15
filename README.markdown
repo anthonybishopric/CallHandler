@@ -33,13 +33,13 @@ Example use
 		}
 		
 		public function alternate_call_handler($name, $args){
-			return "$name is an alternate call handler function";
+			return "$name was called through an alternate call handler function";
 		}
 	}
 	
 	$user = new User();
 	$user->set_first_name("Anthony");
-	echo "hi ". $user->get_first_name(); // "Anthony"
+	echo "hi ". $user->get_first_name(); // "hi Anthony"
 	
 	// CallHandler will override your __call method in order to work. If you'd like your
 	// own __call-like method to continue to work, CallHandler will look for #method_missing in your
@@ -49,7 +49,7 @@ Example use
 	
 	$user->set_call_fallback("alternate_call_handler");
 	
-	$user->francis(); // "francis is an alternate call handler function"
+	$user->francis(); // "francis was called through an alternate call handler function"
 	
 Questions?
 ----------
