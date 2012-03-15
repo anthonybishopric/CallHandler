@@ -3,6 +3,7 @@
 require_once 'Receiver.php';
 require_once 'Receipt.php';
 require_once 'ClosureRegexReceiver.php';
+require_once 'UnsupportedCallException.php';
 
 /**
 * Better structured __call inheritance.
@@ -21,26 +22,34 @@ require_once 'ClosureRegexReceiver.php';
 */
 trait CallHandler{
 	
-	private $receivers = null;
-	
-	public function __construct(){
-		$this->receivers = [];
+	private $call_handler_receivers = [];
+	private $call_handler_fallback = 'method_missing';
+
+	public function set_call_fallback($fallback){
+		$this->call_handler_fallback = $fallback;
 	}
-	
+
 	public function add_match_receiver($pattern, $closure){
-		$this->add_call_receiver(new ClosureRegexReceiver($pattern, $closure->bindTo($this, $this)));
+		$this->add_receiver(new ClosureRegexReceiver($pattern, $closure));
 	}
 	
-	public function add_call_receiver(Receiver $receiver){
-		$this->receivers[] = $receiver;
+	public function add_receiver(Receiver $receiver){
+		$this->call_handler_receivers[] = $receiver;
 	}
 	
 	public function __call($name, $args){
-		foreach($this->receivers as $receiver){
+		foreach($this->call_handler_receivers as $receiver){
 			$receipt = $receiver->do_call($name, $args);
 			if($receipt){
 				return $receipt->return_value();
 			}
+		}
+		if(method_exists($this, $this->call_handler_fallback)){
+			$fallback = $this->call_handler_fallback;
+			return $this->$fallback($name, $args);
+		}
+		else{
+			throw new UnsupportedCallException($name);
 		}
 	}
 }
