@@ -4,7 +4,7 @@ Better magic methods in PHP
 
 Example use
 -----------
-```php
+``` php
 require_once 'CallHandler.php';
 
 class User{
