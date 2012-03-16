@@ -13,7 +13,7 @@ class User{
 	public function __construct(){
 		
 		// support arbitrary setters on this object
-		$this->add_match_receiver('/set_(.+)/', function($matches, $args){
+		$this->support_methods('/set_(.+)/', function($matches, $args){
 
 			// $matches is just the result of preg_match.
 			
@@ -22,7 +22,7 @@ class User{
 		});
 
 		// support arbitrary getters on this object
-		$this->add_match_receiver('/get_(.+)/', function($matches, $args){
+		$this->support_methods('/get_(.+)/', function($matches, $args){
 			$field = $matches[1];
 			return $this->$field;
 		});

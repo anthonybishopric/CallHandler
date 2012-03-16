@@ -30,7 +30,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 
 	public function test_simple_name_is_added_should_support_function(){
 		$a = new A();
-		$a->add_match_receiver('/foo/', function($matches, $args){
+		$a->support_methods('/foo/', function($matches, $args){
 			return $args[0] * $args[1];
 		});
 		$this->assertEquals(6, $a->foo(2,3), "args did not propagate properly to the dynamic function");
@@ -38,7 +38,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 	
 	public function test_adding_regex_match_values_should_be_supported(){
 		$a = new A();
-		$a->add_match_receiver('/add_(\d+)_to_(\d+)/', function($matches, $args){
+		$a->support_methods('/add_(\d+)_to_(\d+)/', function($matches, $args){
 			return $matches[1] + $matches[2];
 		});
 		$this->assertEquals(5, $a->add_2_to_3(), "regex values did not propagate properly to the dynamic function");
@@ -47,7 +47,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 	public function test_scope_of_this_inside_match_receiver_refers_to_the_caller(){
 		$a = new A();
 		$this->karma = "bad";
-		$a->add_match_receiver('/karma_detect/', function($matches, $args){
+		$a->support_methods('/karma_detect/', function($matches, $args){
 			return $this->karma;
 		});
 		$this->assertEquals('bad', $a->karma_detect(), "should have used this test's \$this instead of \$a's \$this");
@@ -55,7 +55,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 	
 	public function test_null_value_should_be_returned_if_matched_function_returns_null(){
 		$a = new A();
-		$a->add_match_receiver('/foo/', function(){
+		$a->support_methods('/foo/', function(){
 			return null;
 		});
 		$this->assertNull($a->foo(), "null should have been matched");
@@ -64,7 +64,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 	public function test_multiple_receivers_should_all_be_queried_for_matches(){
 		// support arbitrary setters on this object
 		$a = new A();
-		$a->add_match_receiver('/set_(.+)/', function($matches, $args) use ($a){
+		$a->support_methods('/set_(.+)/', function($matches, $args) use ($a){
 
 			// $matches is just the result of preg_match.
 			
@@ -73,7 +73,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 		});
 
 		// support arbitrary getters on this object
-		$a->add_match_receiver('/get_(.+)/', function($matches, $args) use ($a){
+		$a->support_methods('/get_(.+)/', function($matches, $args) use ($a){
 			$field = $matches[1];
 			return $a->$field;
 		});

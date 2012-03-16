@@ -29,7 +29,7 @@ trait CallHandler{
 		$this->call_handler_fallback = $fallback;
 	}
 
-	public function add_match_receiver($pattern, $closure){
+	public function support_methods($pattern, $closure){
 		$this->add_receiver(new ClosureRegexReceiver($pattern, $closure));
 	}
 	
