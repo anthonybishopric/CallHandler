@@ -1,6 +1,6 @@
 <?php
 
-class ClosureRegexReceiver implements Receiver{
+class CallHandler_ClosureRegexReceiver implements CallHandler_Receiver{
 	
 	private $pattern;
 	private $closure;
@@ -29,7 +29,7 @@ class ClosureRegexReceiver implements Receiver{
 		$matches = $this->get_matches($name);
 		if($matches){
 			$value = $this->match_call($matches, $args);
-			return new Receipt($value);
+			return new CallHandler_Receipt($value);
 		}
 		else{
 			return null;

@@ -1,9 +1,9 @@
 <?php
 
-require_once 'Receiver.php';
-require_once 'Receipt.php';
-require_once 'ClosureRegexReceiver.php';
-require_once 'UnsupportedCallException.php';
+require_once 'CallHandler/Receiver.php';
+require_once 'CallHandler/Receipt.php';
+require_once 'CallHandler/ClosureRegexReceiver.php';
+require_once 'CallHandler/UnsupportedCallException.php';
 
 /**
 * Better structured __call inheritance.
@@ -30,10 +30,10 @@ trait CallHandler{
 	}
 
 	public function support_methods($pattern, $closure){
-		$this->add_receiver(new ClosureRegexReceiver($pattern, $closure));
+		$this->add_receiver(new CallHandler_ClosureRegexReceiver($pattern, $closure));
 	}
 	
-	public function add_receiver(Receiver $receiver){
+	public function add_receiver(CallHandler_Receiver $receiver){
 		$this->call_handler_receivers[] = $receiver;
 	}
 	
@@ -49,7 +49,7 @@ trait CallHandler{
 			return $this->$fallback($name, $args);
 		}
 		else{
-			throw new UnsupportedCallException($name);
+			throw new CallHandler_UnsupportedCallException($name);
 		}
 	}
 }

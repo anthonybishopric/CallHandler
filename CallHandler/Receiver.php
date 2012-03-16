@@ -1,6 +1,6 @@
 <?php
 
-interface Receiver{
+interface CallHandler_Receiver{
 
 	/**
 	* @param $name the function name being called

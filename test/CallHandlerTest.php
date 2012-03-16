@@ -1,6 +1,6 @@
 <?php
 
-require_once '../src/CallHandler.php';
+require_once '../CallHandler.php';
 
 class A{
 	use CallHandler;
@@ -8,7 +8,7 @@ class A{
 	private $karma = 'good';
 }
 
-class B implements Receiver{
+class B implements CallHandler_Receiver{
 	
 	public function do_call($name, $args){
 		return new Receipt(strrev($name));
@@ -83,7 +83,7 @@ class CallHandlerTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	* @expectedException UnsupportedCallException
+	* @expectedException CallHandler_UnsupportedCallException
 	*/
 	public function test_failure_to_match_any_receivers_should_throw_an_exception(){
 		$a = new A();
